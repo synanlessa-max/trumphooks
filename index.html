@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Castello Checker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080711;
+            --card-bg: rgba(18, 16, 35, 0.6);
+            --card-border: rgba(56, 49, 96, 0.4);
+            --accent-purple: #6c5ce7;
+            --accent-glow: #5849e0;
+            --text-main: #ffffff;
+            --text-muted: #8b87a8;
+            --font-main: 'JetBrains Mono', monospace;
+            --font-title: 'Unbounded', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 50% -20%, rgba(108, 92, 231, 0.15), transparent 70%),
+                radial-gradient(circle at 10% 40%, rgba(88, 73, 224, 0.08), transparent 50%);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Top Navigation Header Card */
+        .top-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-right: 24px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+        .brand-name {
+            font-family: var(--font-title);
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .version-tag {
+            background: rgba(108, 92, 231, 0.2);
+            border: 1px solid rgba(108, 92, 231, 0.4);
+            color: #a29bfe;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.82rem;
+            font-family: var(--font-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--accent-purple);
+            border-color: var(--accent-purple);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+        }
+
+        /* Hero Text */
+        .hero {
+            margin: 10px 0 5px 0;
+        }
+
+        .hero h1 {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Platform Switch */
+        .platform-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .platform-tab {
+            background: var(--accent-purple);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-family: var(--font-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        /* Main Download Card */
+        .download-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        .os-info {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
+        .os-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a29bfe;
+        }
+
+        .os-details h3 {
+            font-size: 1rem;
+            font-family: var(--font-title);
+            margin-bottom: 4px;
+        }
+
+        .os-details p {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .file-meta {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .btn-download {
+            background: var(--accent-purple);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-family: var(--font-main);
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.5);
+        }
+
+        /* Stats Row */
+        .stats-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            backdrop-filter: blur(12px);
+        }
+
+        .stat-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Carousel Card */
+        .carousel-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 60px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            backdrop-filter: blur(12px);
+            min-height: 280px;
+        }
+
+        .carousel-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .carousel-arrow:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .arrow-left { left: 16px; }
+        .arrow-right { right: 16px; }
+
+        .preview-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .preview-logo {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+        }
+
+        .preview-logo svg {
+            width: 36px;
+            height: 36px;
+            fill: #fff;
+        }
+
+        .preview-title {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .preview-loader {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--text-muted);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .carousel-dots {
+            display: flex;
+            gap: 6px;
+            position: absolute;
+            bottom: 16px;
+        }
+
+        .dot {
+            width: 16px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+        }
+
+        .dot.active {
+            background: var(--accent-purple);
+            width: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Верхнее меню -->
+    <div class="top-card">
+        <div class="logo-group">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5 0 .9-.5 1.7-1.2 2.1v2.9h-2.6v-2.9c-.7-.4-1.2-1.2-1.2-2.1C9.5 8.1 10.6 7 12 7z"/></svg>
+            </div>
+            <span class="brand-name">Castello</span>
+            <span class="version-tag">v2.1.0</span>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                Программа
+            </button>
+        </div>
+    </div>
+
+    <!-- Заголовок -->
+    <div class="hero">
+        <h1>Castello сканирует ПК на читы для CS2</h1>
+        <p>Один запуск. Windows.</p>
+    </div>
+
+    <!-- Вкладки платформ -->
+    <div class="platform-tabs">
+        <button class="platform-tab">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.95-9.6L24 0v11.4H10.95M0 12.6h9.75v9.451L0 20.699M10.95 12.6H24V24l-13.05-1.835"/></svg>
+            Windows
+        </button>
+    </div>
+
+    <!-- Карточка скачивания -->
+    <div class="download-card">
+        <div class="os-info">
+            <div class="os-icon">
+                <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1v9.451H0m10.95-9.6L24 0v11.4H10.95M0 12.6h9.75v9.451L0 20.699M10.95 12.6H24V24l-13.05-1.835"/></svg>
+            </div>
+            <div class="os-details">
+                <h3>Windows 10/11</h3>
+                <p>Установщик для Windows</p>
+            </div>
+        </div>
+
+        <div class="file-meta">
+            <div>CastelloChecker.exe</div>
+            <div>Размер файла: 94 109 КБ</div>
+            <div>Дата обновления: 05.07.2026</div>
+        </div>
+
+        <button class="btn-download" onclick="startDownload()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Скачать .exe
+        </button>
+    </div>
+
+    <!-- Мета-данные / Статистика -->
+    <div class="stats-card">
+        <div class="stat-group">
+            <span class="stat-label">Версия:</span>
+            <span class="stat-value">v2.1.0</span>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Дата обновления:</span>
+            <span class="stat-value">05.07.2026</span>
+        </div>
+        <div class="stat-group">
+            <span class="stat-label">Скачано раз:</span>
+            <span class="stat-value" id="download-count">7427</span>
+        </div>
+    </div>
+
+    <!-- Слайдер превью -->
+    <div class="carousel-card">
+        <button class="carousel-arrow arrow-left">&#10094;</button>
+        
+        <div class="preview-content">
+            <div class="preview-logo">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5 0 .9-.5 1.7-1.2 2.1v2.9h-2.6v-2.9c-.7-.4-1.2-1.2-1.2-2.1C9.5 8.1 10.6 7 12 7z"/></svg>
+            </div>
+            <div class="preview-title">CASTELLO</div>
+            <div class="preview-loader">
+                <div class="spinner"></div>
+                <span>Подготовка</span>
+            </div>
+        </div>
+
+        <button class="carousel-arrow arrow-right">&#10095;</button>
+
+        <div class="carousel-dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Ссылка на скачивание файла из раздела Releases вашего репозитория на GitHub:
+    const githubReleaseUrl = "https://github.com/synanlessa-max/logotrumphook/raw/refs/heads/main/Castello%20Checker.exe";
+
+    function startDownload() {
+        // Увеличение счётчика скачиваний на странице
+        const countElement = document.getElementById('download-count');
+        let currentCount = parseInt(countElement.innerText.replace(/\s/g, ''));
+        countElement.innerText = (currentCount + 1).toString();
+        
+        // Перенаправление на файл на GitHub Releases
+        window.location.href = githubReleaseUrl;
+    }
+</script>
+
+</body>
+</html>
